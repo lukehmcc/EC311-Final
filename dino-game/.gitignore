@@ -1,0 +1,11 @@
+# PLEASE put this gitignore in all vivado projects created
+# in this repo or it will get annoying very fast
+
+# ignores everything
+/*
+/*/
+
+# now unignore important files
+!*.srcs
+!*.xpr
+!*.gitignore
