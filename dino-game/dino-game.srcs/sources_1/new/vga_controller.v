@@ -22,7 +22,7 @@
 
 module vga_controller(
     input in_clk,
-    input [7:0] y_offset, // connect this to a switch for now. 
+    input [7:0] wyo, fxo, fyo, // wizard y offset, fireball x & y offset
     output reg [3:0] VGA_R,
     output reg [3:0] VGA_G,
     output reg [3:0] VGA_B,
@@ -36,32 +36,51 @@ module vga_controller(
     reg [31:0] vp, hp;
     reg [1:0] vertical_state, horizontal_state;
     reg vertical_trigger, vertical_blank; // triggers the vertical state machine
-    // states: 0 means pre-blanking; 1 means pixels; 2 means post-blanking; 3 means synchronizing
+    // states: 0 means pre-blanking; 1 means wizard; 2 means post-blanking; 3 means synchronizing
     // pre-blanking: 48 cycles, HS high
-    // pixels: 640 cycles, HS high
+    // wizard: 640 cycles, HS high
     // post-blanking: 16 cycles, HS high
     // synchronization: 96 cycles, HS low
 
-    reg [15:0] pixels [15:0];
+    reg [15:0] wizard [15:0];
+    reg [15:0] fireball [15:0];
 
     initial begin
-        // Value 0
-        pixels[0] = 16'b1111111111111111;
-        pixels[1] = 16'b1111111111111111;
-        pixels[2] = 16'b1100000000000011;
-        pixels[3] = 16'b1100000000000011;
-        pixels[4] = 16'b1100000000000011;
-        pixels[5] = 16'b1100000000000011;
-        pixels[6] = 16'b1100000000000011;
-        pixels[7] = 16'b1100000000000011;
-        pixels[8] = 16'b1100000000000011;
-        pixels[9] = 16'b1100000000000011;
-        pixels[10] = 16'b1100000000000011;
-        pixels[11] = 16'b1100000000000011;
-        pixels[12] = 16'b1100000000000011;
-        pixels[13] = 16'b1100000000000011;
-        pixels[14] = 16'b1111111111111111;
-        pixels[15] = 16'b1111111111111111;
+        // Wizard art
+        wizard[0] = 16'b1111111111111111;
+        wizard[1] = 16'b1111111111111111;
+        wizard[2] = 16'b1100000000000011;
+        wizard[3] = 16'b1100000000000011;
+        wizard[4] = 16'b1100000000000011;
+        wizard[5] = 16'b1100000000000011;
+        wizard[6] = 16'b1100000000000011;
+        wizard[7] = 16'b1100000000000011;
+        wizard[8] = 16'b1100000000000011;
+        wizard[9] = 16'b1100000000000011;
+        wizard[10] = 16'b1100000000000011;
+        wizard[11] = 16'b1100000000000011;
+        wizard[12] = 16'b1100000000000011;
+        wizard[13] = 16'b1100000000000011;
+        wizard[14] = 16'b1111111111111111;
+        wizard[15] = 16'b1111111111111111;
+        
+        // fireball art
+        fireball[0] = 16'b1111111111111111;
+        fireball[1] = 16'b1111111111111111;
+        fireball[2] = 16'b1111111111111111;
+        fireball[3] = 16'b1111111111111111;
+        fireball[4] = 16'b1111111111111111;
+        fireball[5] = 16'b1111111111111111;
+        fireball[6] = 16'b1111111111111111;
+        fireball[7] = 16'b1111111111111111;
+        fireball[8] = 16'b1111111111111111;
+        fireball[9] = 16'b1111111111111111;
+        fireball[10] = 16'b1111111111111111;
+        fireball[11] = 16'b1111111111111111;
+        fireball[12] = 16'b1111111111111111;
+        fireball[13] = 16'b1111111111111111;
+        fireball[14] = 16'b1111111111111111;
+        fireball[15] = 16'b1111111111111111;
         
         vp = 0; // vertical position
         count = 1;
@@ -98,7 +117,7 @@ module vga_controller(
         end
         else if (horizontal_state == 1)
             begin
-                // shift out 640 pixels
+                // shift out 640 wizard
                 if (hp == 640)
                 begin
                     // reached end of line
@@ -112,8 +131,13 @@ module vga_controller(
                 begin
                     if (vertical_blank == 0)
                     begin
-                        // wizard code
-                        if (hp > 0 && hp < 17 && vp > 278-y_offset && vp < 297+-y_offset && pixels[vp-279+y_offset][hp-1] == 1) begin
+                        // wizard definition
+                        if (hp > 0 && hp < 17 && vp > 278-wyo && vp < 297-wyo && wizard[vp-279+wyo][hp-1] == 1) begin
+                            VGA_R <= 8;
+                            VGA_G <= 8;
+                            VGA_B <= 8;
+                        // fireball definition
+                        end else if (hp > 620-fxo && hp < 637-fxo && vp > 278-fyo && vp < 297-fyo && fireball[vp-279+fyo][hp-1+fxo] == 1 && fxo < 641) begin
                             VGA_R <= 8;
                             VGA_G <= 8;
                             VGA_B <= 8;
