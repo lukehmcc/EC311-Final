@@ -24,12 +24,14 @@ module keyboard_top(
     input clk,
     input PS2_CLK,
     input PS2_DATA,
-    output reg [2:0] keyout
+    output idle,
+    output up,
+    output down
     );
     
         
 reg CLK50MHZ=0;    
-reg [3:0] state;
+reg [2:0] state;
 wire [31:0]keycode;
 
 always @(posedge(clk))begin
@@ -43,23 +45,25 @@ PS2Receiver keyboard (
 .keycodeout(keycode[31:0])
 );
 
-wire [7:0] key = keycode[7:0];
+wire [15:0] key = keycode[15:0];
+
 //29 is space (jump), 12 is shift (crouch)
 
 initial begin
-state = 4'b0001;
+state = 3'b001;
 end
 
-always @(posedge clk) begin
-    if (key == 8'h29 & state[4] == 0) 
-    state = 4'b0100;
-    if (key == 8'h12 & state[4] == 0)
-    state = 4'b0010;
-    if (key == 8'hF0 & state [4] == 0)
-    state = 4'b1001;
-    if (state[4] == 1)
-    state = 4'b0001;    
-    keyout = state[2:0];
+always @(key) begin
+    if (key[7:0] == 8'h29 & key[15:8] != 8'hF0) 
+    state = 4'b100; //up state when space is pressed
+    if (key[7:0] == 8'h12 & key[15:8] != 8'hF0)
+    state = 4'b010; //down state when shift is pressed
+    if (key[15:8] == 8'hF0)
+    state = 4'b001; //idle state when a key is released   
 end
+
+assign idle = state[0];
+assign down = state[1];
+assign up = state[2];
 
 endmodule
