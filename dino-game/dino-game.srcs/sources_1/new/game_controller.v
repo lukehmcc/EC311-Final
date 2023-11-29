@@ -30,6 +30,6 @@ module game_controller(
     output reg VGA_VS
     );
     
-    vga_controller v0(.in_clk(in_clk), .jump(jump), .VGA_R(VGA_R), .VGA_B(VGA_B), .VGA_HS(VGA_HS), .VGA_VS(VGA_VS));
+    vga_controller v0(.in_clk(in_clk), .jump(jump), .VGA_R(VGA_R), .VGA_G(VGA_G), .VGA_B(VGA_B), .VGA_HS(VGA_HS), .VGA_VS(VGA_VS));
     
 endmodule
