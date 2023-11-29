@@ -22,7 +22,7 @@
 
 module vga_controller(
     input in_clk,
-    input jump, // connect this to a switch for now. 
+    input [7:0] y_offset, // connect this to a switch for now. 
     output reg [3:0] VGA_R,
     output reg [3:0] VGA_G,
     output reg [3:0] VGA_B,
@@ -113,7 +113,7 @@ module vga_controller(
                     if (vertical_blank == 0)
                     begin
                         // wizard code
-                        if (hp > 0 && hp < 17 && vp > 278 && vp < 297 && pixels[vp-279][hp-1] == 1) begin
+                        if (hp > 0 && hp < 17 && vp > 278-y_offset && vp < 297+-y_offset && pixels[vp-279+y_offset][hp-1] == 1) begin
                             VGA_R <= 8;
                             VGA_G <= 8;
                             VGA_B <= 8;

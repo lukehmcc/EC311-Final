@@ -30,6 +30,11 @@ module game_controller(
     output VGA_VS
     );
     
-    vga_controller v0(.in_clk(in_clk), .jump(jump), .VGA_R(VGA_R), .VGA_G(VGA_G), .VGA_B(VGA_B), .VGA_HS(VGA_HS), .VGA_VS(VGA_VS));
+    // define vars
+    wire [7:0] y_offset; 
+    
+    // mod calls
+    jump_controller jc0(.y_offset(y_offset), .in_clk(in_clk));
+    vga_controller vc0(.in_clk(in_clk), .y_offset(y_offset), .VGA_R(VGA_R), .VGA_G(VGA_G), .VGA_B(VGA_B), .VGA_HS(VGA_HS), .VGA_VS(VGA_VS));
     
 endmodule
