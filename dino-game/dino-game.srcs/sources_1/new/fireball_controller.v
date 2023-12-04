@@ -21,38 +21,27 @@
 
 
 module fireball_controller(
-    clk,
-    fxo, fyo, // fireball x & y offsets
-    );
-    // I/O
-    input clk;
-    output reg [7:0] fxo, fyo;
-    
+    input frame,
+    output reg [7:0] fxo, fyo // fireball x & y offsets
+    );    
     // Vars
-    reg [20:0] c1;
-    reg [9:0] c2;
+    reg [9:0] c1;
     
     // Init
     initial begin 
         c1 = 0;
-        c2 = 0;
         fxo = 0; 
         fyo = 0;
     end
     
     // Main logic
-    always @(posedge clk) begin 
-        if (c1 == 1666667) begin // this updates 60 times per second
-            // for now lets send 1 fireball every (640pixels/120 pixels/s) ~5.5s
-            if (c2 == 700) begin
-                fxo = c2;
-                c2 = 0;
+    always @(posedge frame) begin 
+            if (c1 == 700) begin
+                fxo = c1;
+                c1 = 0;
             end
-            c2 = c2 + 2;
-            c1 = 0;
-        end
-        c1 = c1 + 1;
-    end    
+            c1 = c1 + 2;
+        end    
 endmodule
 
 
