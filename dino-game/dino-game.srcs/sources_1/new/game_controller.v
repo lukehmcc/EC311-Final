@@ -32,7 +32,8 @@ module game_controller(
     );
     
     // define vars
-    wire [7:0] rand, wizard_y_offset, fireball_x_offset, fireball_y_offset;
+    wire [7:0] rand, wizard_y_offset;
+    wire [9:0] fireball_1_x_offset, fireball_1_y_offset, fireball_2_x_offset, fireball_2_y_offset;
     wire idle, up, down;
     reg frame;
     reg [20:0] c1;
@@ -49,16 +50,15 @@ module game_controller(
             c1 = 0;
         end
     end
-    
-    
-    
-    
+ 
+     
     // mod calls
     rng rng(.clk(in_clk),.frame(frame),.click(up),.rand(rand));
-    fireball_controller fc0(.frame(frame), .fxo(fireball_x_offset), .fyo(fireball_y_offset));
+    fireball_controller fc0(.frame(frame),.rand(rand), .fxo1(fireball_1_x_offset), .fyo1(fireball_2_y_offset), .fxo2(fireball_x_offset), .fyo2(fireball_y_offset));
     jump_controller jc0(.y_offset(wizard_y_offset), .in_clk(in_clk), .up(up));
     vga_controller vc0(.in_clk(in_clk), .wyo(wizard_y_offset), 
-    .fxo(fireball_x_offset), .fyo(fireball_y_offset),
+    .fxo1(fireball_1_x_offset), .fyo1(fireball_1_y_offset),
+    .fxo2(fireball_2_x_offset), .fyo2(fireball_2_y_offset),
     .VGA_R(VGA_R), .VGA_G(VGA_G), .VGA_B(VGA_B), .VGA_HS(VGA_HS), .VGA_VS(VGA_VS));
     keyboard_top(.clk(in_clk), .PS2_CLK(PS2_CLK), .PS2_DATA(PS2_DATA), .idle(idle), .up(up), .down(down));
     

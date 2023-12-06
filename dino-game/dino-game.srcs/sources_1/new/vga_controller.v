@@ -22,7 +22,8 @@
 
 module vga_controller(
     input in_clk,
-    input [7:0] wyo, fxo, fyo, // wizard y offset, fireball x & y offset
+    input [7:0] wyo, 
+    input [9:0] fxo1, fyo1,fxo2, fyo2, // wizard y offset, fireball x & y offset
     output reg [3:0] VGA_R,
     output reg [3:0] VGA_G,
     output reg [3:0] VGA_B,
@@ -136,8 +137,13 @@ module vga_controller(
                             VGA_R <= 8;
                             VGA_G <= 8;
                             VGA_B <= 8;
-                        // fireball definition
-                        end else if (hp > 620-fxo && hp < 637-fxo && vp > 278-fyo && vp < 297-fyo && fireball[vp-279+fyo][hp-1+fxo] == 1 && fxo < 641) begin
+                        // fireball 1 definition
+                        end else if (hp > 620-fxo1 && hp < 637-fxo1 && vp > 278-fyo1 && vp < 297-fyo1 && fireball[vp-279+fyo1][hp-1+fxo1] == 1 && fxo1 < 641) begin
+                            VGA_R <= 8;
+                            VGA_G <= 8;
+                            VGA_B <= 8;
+                        //fireball 2 definition
+                        end else if (hp > 620-fxo2 && hp < 637-fxo2 && vp > 278-fyo2 && vp < 297-fyo2 && fireball[vp-279+fyo2][hp-1+fxo2] == 1 && fxo2 < 641) begin
                             VGA_R <= 8;
                             VGA_G <= 8;
                             VGA_B <= 8;

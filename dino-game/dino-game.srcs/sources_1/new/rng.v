@@ -27,6 +27,11 @@ module rng(
     output reg [7:0] rand
     );
     
+    initial begin
+    seed = 3;
+    hold = 3;
+    end
+    
     reg [7:0] seed;
     reg [7:0] hold;
     always @(posedge clk)
@@ -38,6 +43,6 @@ module rng(
     end
     
     always @(posedge frame)
-    rand = seed^hold;
+    rand = hold**seed;
         
 endmodule
