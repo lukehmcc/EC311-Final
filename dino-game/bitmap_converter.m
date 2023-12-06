@@ -1,11 +1,51 @@
 %Make sure to have image files in the matlab directory in order to execute this code. BMP file will be stored in local Matlab directory 
+%Code from https://www.instructables.com/Image-from-FPGA-to-VGA/
 
 
-% Read the image file into an array
-imageArray = imread('WizardFall.png');
+%read the image
+I = imread('WizardStationary.png');	
+imshow(I);
+		
+%Extract RED, GREEN and BLUE components from the image
+R = I(:,:,1);			
+G = I(:,:,2);
+B = I(:,:,3);
 
-% Write the array to a bitmap file
-imwrite(imageArray, 'WizardFall.bmp', 'bmp');
+%make the numbers to be of double format for 
+R = double(R);	
+G = double(G);
+B = double(B);
 
-% Display the bitmap image
-imshow('WizardFall.bmp');
+%Raise each member of the component by appropriate value. 
+R = R.^(3/8); % 8 bits -> 3 bits
+G = G.^(3/8); % 8 bits -> 3 bits
+B = B.^(1/4); % 8 bits -> 2 bits
+
+%tranlate to integer
+R = uint8(R); % float -> uint8
+G = uint8(G);
+B = uint8(B);
+
+%minus one cause sometimes conversion to integers rounds up the numbers wrongly
+R = R-1; % 3 bits -> max value is 111 (bin) -> 7 (dec)(hex)
+G = G-1;
+B = B-1; % 11 (bin) -> 3 (dec)(hex)
+
+%shift bits and construct one Byte from 3 + 3 + 2 bits
+G = bitshift(G, 3); % 3 << G (shift by 3 bits)
+B = bitshift(B, 6); % 6 << B (shift by 6 bits)
+COLOR = R+G+B;      % R + 3 << G + 6 << B
+
+%save variable COLOR to a file in HEX format for the chip to read
+fileID = fopen ('WizardStationary.list', 'w');
+for i = 1:size(COLOR(:), 1)-1
+    fprintf (fileID, '%x\n', COLOR(i)); % COLOR (dec) -> print to file (hex)
+end
+fprintf (fileID, '%x', COLOR(size(COLOR(:), 1))); % COLOR (dec) -> print to file (hex)
+%save variable COLOR to a file in HEX format for the chip to read
+%fileID = fopen ('Mickey.list', 'w');
+%fprintf (fileID, '%x\n', COLOR); % COLOR (dec) -> print to file (hex)
+fclose (fileID);
+
+%translate to hex to see how many lines
+COLOR_HEX = dec2hex(COLOR);
