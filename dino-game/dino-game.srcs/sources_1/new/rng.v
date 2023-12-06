@@ -43,6 +43,6 @@ module rng(
     end
     
     always @(posedge frame)
-    rand = hold**seed;
+    rand = hold*seed;
         
 endmodule
