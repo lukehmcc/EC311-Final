@@ -35,12 +35,4 @@ module fireball_controller_tb(
     click = 0;
     end
     always #1 frame = ~frame;
-    
-   
-    
-    
-    
-
-    
-    
 endmodule
