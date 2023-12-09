@@ -39,8 +39,8 @@ module collision_controller(
         ) 
         || 
         (
-            ((((fxo1 >= 564) && (fxo1 <= 580)) && ((0+wyo <= fyo1) && (fyo1 <= 8+wyo))) // has the first fireball hit the crouching wizard ?
-            || (((fxo1 >= 564) && (fxo1 <= 580)) && ((0+wyo <= fyo2) && (fyo2 <= 8+wyo))) // has the second fireball hit the crouching wizard ?
+            ((((fxo1 >= 564) && (fxo1 <= 580)) && ((8+wyo <= fyo1) && (fyo1 <= 16+wyo))) // has the first fireball hit the crouching wizard ?
+            || (((fxo1 >= 564) && (fxo1 <= 580)) && ((8+wyo <= fyo2) && (fyo2 <= 16+wyo))) // has the second fireball hit the crouching wizard ?
             && crouch)
         )
         && 
