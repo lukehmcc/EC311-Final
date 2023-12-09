@@ -26,23 +26,24 @@ module rng(
     input clk,
     output reg [7:0] rand
     );
-    
-    initial begin
-    seed = 3;
-    hold = 3;
-    end
-    
+
     reg [7:0] seed;
     reg [7:0] hold;
+    
+    initial begin
+        seed = 3;
+        hold = 3;
+    end
+    
+    
     always @(posedge clk)
-    seed = seed + 1;
+        seed = seed + 1;
     
     always @(posedge clk) begin
-    if (click == 1)
-    hold = seed;
+        if (click == 1)
+            hold = seed;
     end
     
     always @(posedge frame)
-    rand = hold*seed;
-        
+        rand = hold*seed;
 endmodule

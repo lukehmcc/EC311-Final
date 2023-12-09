@@ -34,26 +34,39 @@ module game_controller(
     // randomness, wizard & fireball x & y offsets
     wire [7:0] rand, wyo;
     wire [9:0] fxo1, fyo1, fxo2, fyo2;
-    wire idle, up, down, game_state, reset;
+    wire idle, up, down, collision, reset;
     wire frame;
     reg [20:0] c1;
     
     // create a frame clock
     frame_clock_divier fcd0(.clk(in_clk), .fclk(frame));
      
-    // mod calls
+    // gets rng
     rng rng(.clk(in_clk),.frame(frame),.click(up),.rand(rand));
     
-    fireball_controller fc0(.frame(frame),.rand(rand), 
-    .fxo1(fxo1), .fyo1(fxo1), 
+    // controlls fireball
+    fireball_controller fc0(.frame(frame),.rand(rand), .reset(reset),
+    .collision(collision), .fxo1(fxo1), .fyo1(fxo1), 
     .fxo2(fxo2), .fyo2(fyo2));
     
-    jump_controller jc0(.y_offset(wyo), .in_clk(in_clk), .up(up));
-   
+    // takes keyboard input and defines jump
+    jump_controller jc0(.y_offset(wyo), .up(up), 
+    .frame(frame), .collision(collision));
+    
+    // outputs t the display
     vga_controller vc0(.in_clk(in_clk), .wyo(wyo), 
     .fxo1(fxo1), .fyo1(fxo1),
     .fxo2(fxo2), .fyo2(fyo2),
     .VGA_R(VGA_R), .VGA_G(VGA_G), .VGA_B(VGA_B), .VGA_HS(VGA_HS), .VGA_VS(VGA_VS));
     
-    keyboard_top kt0(.clk(in_clk), .PS2_CLK(PS2_CLK), .PS2_DATA(PS2_DATA), .idle(idle), .up(up), .down(down));
+    // cleans keyboard inputs into up and down presses
+    keyboard_top kt0(.clk(in_clk), .PS2_CLK(PS2_CLK), .PS2_DATA(PS2_DATA), 
+    .idle(idle), .up(up), .down(down));
+
+    // detects collisions
+    collision_controller cc0(.wyo(wyo), .fxo1(fxo1), .fyo1(fyo1), .fxo2(fxo2), 
+    .fyo2(fyo2), .reset(reset), .frame(frame), .collision(collision));
+
+    // defines reset pulse
+    
 endmodule
