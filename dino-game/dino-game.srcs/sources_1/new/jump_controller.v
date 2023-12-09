@@ -21,7 +21,7 @@
 
 
 module jump_controller(
-    input up, frame, collision,
+    input up, frame, collision, reset,
     output reg [7:0] y_offset
     );
     // first we gotta sync up the 100MHz clock to 60fps
@@ -37,20 +37,20 @@ module jump_controller(
     
     // jump logic.
     always @(posedge frame) begin
-        if (up && !jumping) begin
+        if (up) begin 
             jumping = 1;
         end
         // jump animation
         if (jumping) begin
             if (!direction) begin // going up 
                 if (y_offset < 30) begin
-                    y_offset = y_offset + 1;
+                    y_offset = y_offset + 2;
                 end else begin
                     direction = !direction;
                 end
             end else begin // going down
                 if (y_offset > 0) begin
-                    y_offset = y_offset - 1;
+                    y_offset = y_offset - 2;
                 end else begin
                     direction = !direction;
                     jumping = 0;

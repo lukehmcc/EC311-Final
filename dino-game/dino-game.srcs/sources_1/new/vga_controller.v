@@ -133,7 +133,7 @@ module vga_controller(
                     if (vertical_blank == 0)
                     begin
                         // wizard definition
-                        if (hp > 0 && hp < 17 && vp > 278-wyo && vp < 297-wyo && wizard[vp-279+wyo][hp-1] == 1) begin
+                        if (hp > 40 && hp < 57 && vp > 278-wyo && vp < 297-wyo && wizard[vp-279+wyo][hp-41] == 1) begin
                             VGA_R <= 8;
                             VGA_G <= 8;
                             VGA_B <= 8;

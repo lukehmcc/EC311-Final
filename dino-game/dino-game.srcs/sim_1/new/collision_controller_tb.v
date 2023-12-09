@@ -26,7 +26,7 @@ module collision_controller_tb();
     reg reset, frame;
     wire collision;
     
-    collision_controller cc0(.fxo1(fxo1), .fyo1(fyo1), .fxo2(fxo2), .fyo2(fyo2), .wyo(wyo), .reset(reset), .collision(collision));
+    collision_controller cc0(.fxo1(fxo1), .fyo1(fyo1), .fxo2(fxo2), .fyo2(fyo2), .wyo(wyo), .reset(reset), .frame(frame), .collision(collision));
 
     initial begin 
         fxo1 = 0;
@@ -52,11 +52,25 @@ module collision_controller_tb();
         fxo2 = 0; 
         fyo2 = 0;
         wyo = 0;
+        reset = 0;
+        #10;
+        fxo1 = 630;
+        fyo1 = 0;
+        fxo2 = 0; 
+        fyo2 = 0;
+        wyo = 0;
         reset = 1;
         #10;
         fxo1 = 0;
-        fyo1 = 630;
-        fxo2 = 0; 
+        fyo1 = 0;
+        fxo2 = 630; 
+        fyo2 = 0;
+        wyo = 0;
+        reset = 0;
+        #10;
+        fxo1 = 0;
+        fyo1 = 0;
+        fxo2 = 200; 
         fyo2 = 0;
         wyo = 0;
         reset = 0;

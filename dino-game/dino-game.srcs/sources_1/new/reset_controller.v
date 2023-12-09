@@ -21,26 +21,26 @@
 
 
 module reset_controller(
-    gs_in, up, frame,
-    gs_out, reset
+    col_in, up, frame,
+    col_out, reset
     );
     // gs == game state, if gs == 1 then death has occured
-    input gs_in, up, frame;
-    output reg gs_out, reset;
+    input col_in, up, frame;
+    output reg col_out, reset;
 
     initial begin
-        gs_out = 0;
+        col_out = col_in;
         reset = 0;
     end
 
     always @ (posedge frame) begin
-        if (gs_in == 1 && up) begin
-            gs_out = 0;
-            reset = 1;
-        end else begin 
-            gs_out = gs_in;
-            reset = 0;
-        end
+        // if (col_in == 1 && up) begin
+        //     col_out = 0;
+        //     reset = 1;
+        // end else begin 
+        //     col_out = col_in;
+        //     reset = 0;
+        // end
     end
 
 endmodule
