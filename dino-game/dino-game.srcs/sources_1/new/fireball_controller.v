@@ -22,7 +22,7 @@
 
 module fireball_controller(
     input frame, collision, reset,
-    input [2:0] rand, // this is purposefully too narrow
+    input [3:0] rand, // this is purposefully too narrow
     output reg [9:0] fxo1, fyo1, fxo2, fyo2 // fireball x & y offsets
     );    
     // Vars
@@ -39,7 +39,7 @@ module fireball_controller(
     
     // Main logic
     always @(posedge frame) begin 
-        if (fxo1 == 700) begin 
+        if (fxo1 == 700 || reset) begin 
             fxo1 = 0; fxo2 = 0;
             case (rand) 
                 0:begin
@@ -82,6 +82,11 @@ module fireball_controller(
                     fyo2 = ground;
                     fxo2 = -30;
                 end 
+                8:begin
+                    fyo1 = ground + 20; // two, one above ahead
+                    fyo2 = ground;
+                    fxo2 = -300;
+                end
             endcase
         end else begin
             if (reset) begin

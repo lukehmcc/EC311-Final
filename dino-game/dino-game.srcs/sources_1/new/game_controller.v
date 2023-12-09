@@ -37,7 +37,6 @@ module game_controller(
     wire [9:0] fxo1, fyo1, fxo2, fyo2;
     wire collision, reset;
     wire frame;
-    assign reset = 0;
 
     // create a frame clock
     frame_clock_divier fcd0(.clk(in_clk), .fclk(frame));
@@ -69,7 +68,6 @@ module game_controller(
     .fyo2(fyo2), .reset(reset), .frame(frame), .collision(collision));
 
     // defines reset pulse
-    // reset_controller rc0(.col_in(collision), .col_out(collision), .up(up), 
-    // .frame(frame), .reset(reset));
+    reset_controller rc0(.collision(collision), .up(up), .frame(frame), .reset(reset));
     
 endmodule

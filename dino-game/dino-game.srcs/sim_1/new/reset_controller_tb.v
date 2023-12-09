@@ -21,28 +21,27 @@
 
 
 module reset_controller_tb();
-    reg gs_in, up, frame;
-    wire gs_out, reset;
+    reg collision, up, frame;
+    wire reset;
     
-    reset_controller rc0(.gs_in(gs_in), .up(up), .frame(frame), .gs_out(gs_out), .reset(reset));
+    reset_controller rc0(.collision(collision), .up(up), .frame(frame), .reset(reset));
 
     initial begin 
-        gs_in = 0;
         up = 0;
         frame = 0;
     end
     always #1 frame = ~frame;
     initial begin
-        gs_in = 0;
+        collision = 0;
         up = 0; 
         #10;
-        gs_in = 0;
+        collision = 0;
         up = 1; 
         #10;
-        gs_in = 1;
+        collision = 1;
         up = 0; 
         #10;
-        gs_in = 1;
+        collision = 1;
         up = 1; 
     end
 endmodule

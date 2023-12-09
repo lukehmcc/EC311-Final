@@ -41,10 +41,10 @@ module jump_controller(
             jumping = 1;
         end
         // jump animation
-        if (jumping) begin
+        if (jumping && ~collision) begin
             if (!direction) begin // going up 
-                if (y_offset < 30) begin
-                    y_offset = y_offset + 2;
+                if (y_offset < 42) begin
+                    y_offset = y_offset + 3;
                 end else begin
                     direction = !direction;
                 end
