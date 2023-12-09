@@ -138,12 +138,12 @@ module vga_controller(
                             VGA_G <= 8;
                             VGA_B <= 8;
                         // fireball 1 definition
-                        end else if (hp > 620-fxo1 && hp < 637-fxo1 && vp > 278-fyo1 && vp < 297-fyo1 && fireball[vp-279+fyo1][hp-1+fxo1] == 1 && fxo1 < 641) begin
+                        end else if (hp > 624-fxo1 && hp < 640-fxo1 && vp > 278-fyo1 && vp < 297-fyo1 && fireball[vp-279+fyo1][hp-1+fxo1] == 1 && fxo1 < 641) begin
                             VGA_R <= 8;
                             VGA_G <= 8;
                             VGA_B <= 8;
                         //fireball 2 definition
-                        end else if (hp > 620-fxo2 && hp < 637-fxo2 && vp > 278-fyo2 && vp < 297-fyo2 && fireball[vp-279+fyo2][hp-1+fxo2] == 1 && fxo2 < 641) begin
+                        end else if (hp > 624-fxo2 && hp < 640-fxo2 && vp > 278-fyo2 && vp < 297-fyo2 && fireball[vp-279+fyo2][hp-1+fxo2] == 1 && fxo2 < 641) begin
                             VGA_R <= 8;
                             VGA_G <= 8;
                             VGA_B <= 8;

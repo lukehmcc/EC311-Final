@@ -35,23 +35,11 @@ module game_controller(
     wire [7:0] rand, wyo;
     wire [9:0] fxo1, fyo1, fxo2, fyo2;
     wire idle, up, down, game_state, reset;
-    reg frame;
+    wire frame;
     reg [20:0] c1;
     
     // create a frame clock
-    initial begin
-    c1 = 0;
-    frame = 0;
-    end
-    
-    always @(posedge in_clk) begin
-        c1 = c1 + 1;
-        if (c1 == 1666667) begin
-            frame = ~frame;
-            c1 = 0;
-        end
-    end
- 
+    frame_clock_divier fcd0(.clk(in_clk), .fclk(frame));
      
     // mod calls
     rng rng(.clk(in_clk),.frame(frame),.click(up),.rand(rand));
@@ -68,7 +56,4 @@ module game_controller(
     .VGA_R(VGA_R), .VGA_G(VGA_G), .VGA_B(VGA_B), .VGA_HS(VGA_HS), .VGA_VS(VGA_VS));
     
     keyboard_top kt0(.clk(in_clk), .PS2_CLK(PS2_CLK), .PS2_DATA(PS2_DATA), .idle(idle), .up(up), .down(down));
-
-
-    
 endmodule
