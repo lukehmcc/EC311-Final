@@ -54,7 +54,7 @@ module game_controller(
     .frame(frame), .collision(collision));
     
     // outputs to the display
-    vga_controller vc0(.in_clk(in_clk), .wyo(wyo), 
+    vga_controller vc0(.in_clk(in_clk), .wyo(wyo), .crouch(down),
     .fxo1(fxo1), .fyo1(fyo1),
     .fxo2(fxo2), .fyo2(fyo2),
     .VGA_R(VGA_R), .VGA_G(VGA_G), .VGA_B(VGA_B), .VGA_HS(VGA_HS), .VGA_VS(VGA_VS));
@@ -65,7 +65,7 @@ module game_controller(
 
     // detects collisions
     collision_controller cc0(.wyo(wyo), .fxo1(fxo1), .fyo1(fyo1), .fxo2(fxo2), 
-    .fyo2(fyo2), .reset(reset), .frame(frame), .collision(collision));
+    .fyo2(fyo2), .reset(reset), .frame(frame), .collision(collision), .crouch(down));
 
     // defines reset pulse
     reset_controller rc0(.collision(collision), .up(up), .frame(frame), .reset(reset));

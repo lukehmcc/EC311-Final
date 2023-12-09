@@ -21,7 +21,7 @@
 
 
 module vga_controller(
-    input in_clk,
+    input in_clk, crouch,
     input [7:0] wyo, 
     input [9:0] fxo1, fyo1,fxo2, fyo2, // wizard y offset, fireball x & y offset
     output reg [3:0] VGA_R,
@@ -43,27 +43,44 @@ module vga_controller(
     // post-blanking: 16 cycles, HS high
     // synchronization: 96 cycles, HS low
 
-    reg [15:0] wizard [15:0];
+    reg [15:0] wizard [15:0][1:0];
     reg [15:0] fireball [15:0];
 
     initial begin
         // Wizard art
-        wizard[0] = 16'b1111111111111111;
-        wizard[1] = 16'b1111111111111111;
-        wizard[2] = 16'b1100000000000011;
-        wizard[3] = 16'b1100000000000011;
-        wizard[4] = 16'b1100000000000011;
-        wizard[5] = 16'b1100000000000011;
-        wizard[6] = 16'b1100000000000011;
-        wizard[7] = 16'b1100000000000011;
-        wizard[8] = 16'b1100000000000011;
-        wizard[9] = 16'b1100000000000011;
-        wizard[10] = 16'b1100000000000011;
-        wizard[11] = 16'b1100000000000011;
-        wizard[12] = 16'b1100000000000011;
-        wizard[13] = 16'b1100000000000011;
-        wizard[14] = 16'b1111111111111111;
-        wizard[15] = 16'b1111111111111111;
+        wizard[0][0] = 16'b1111111111111111;
+        wizard[1][0] = 16'b1111111111111111;
+        wizard[2][0] = 16'b1100000000000011;
+        wizard[3][0] = 16'b1100000000000011;
+        wizard[4][0] = 16'b1100000000000011;
+        wizard[5][0] = 16'b1100000000000011;
+        wizard[6][0] = 16'b1100000000000011;
+        wizard[7][0] = 16'b1100000000000011;
+        wizard[8][0] = 16'b1100000000000011;
+        wizard[9][0] = 16'b1100000000000011;
+        wizard[10][0] = 16'b1100000000000011;
+        wizard[11][0] = 16'b1100000000000011;
+        wizard[12][0] = 16'b1100000000000011;
+        wizard[13][0] = 16'b1100000000000011;
+        wizard[14][0] = 16'b1111111111111111;
+        wizard[15][0] = 16'b1111111111111111;
+
+        wizard[0][1] = 16'b0000000000000000;
+        wizard[1][1] = 16'b0000000000000000;
+        wizard[2][1] = 16'b0000000000000000;
+        wizard[3][1] = 16'b0000000000000000;
+        wizard[4][1] = 16'b0000000000000000;
+        wizard[5][1] = 16'b0000000000000000;
+        wizard[6][1] = 16'b0000000000000000;
+        wizard[7][1] = 16'b0000000000000000;
+        wizard[8][1] = 16'b1111111111111111;
+        wizard[9][1] = 16'b1111111111111111;
+        wizard[10][1] = 16'b1100000000000011;
+        wizard[11][1] = 16'b1100000000000011;
+        wizard[12][1] = 16'b1100000000000011;
+        wizard[13][1] = 16'b1100000000000011;
+        wizard[14][1] = 16'b1111111111111111;
+        wizard[15][1] = 16'b1111111111111111;
         
         // fireball art
         fireball[0] = 16'b1111111111111111;
@@ -133,7 +150,7 @@ module vga_controller(
                     if (vertical_blank == 0)
                     begin
                         // wizard definition
-                        if (hp > 40 && hp < 57 && vp > 278-wyo && vp < 297-wyo && wizard[vp-279+wyo][hp-41] == 1) begin
+                        if (hp > 40 && hp < 57 && vp > 278-wyo && vp < 297-wyo && wizard[vp-279+wyo][crouch][hp-41] == 1) begin
                             VGA_R <= 8;
                             VGA_G <= 8;
                             VGA_B <= 8;

@@ -50,7 +50,7 @@ module fireball_controller(
                 1:begin
                     fyo1 = ground; // two at ground small gap
                     fyo2 = ground;
-                    fxo2 = -30;
+                    fxo2 = -50;
                 end 
                 2:begin
                     fyo1 = ground + 15; //one elevated
@@ -60,7 +60,7 @@ module fireball_controller(
                 3:begin
                     fyo1 = ground; //two, one elevated behind
                     fyo2 = ground + 15;
-                    fxo2 = -20;
+                    fxo2 = -40;
                 end 
                 4:begin
                     fyo1 = ground; //two on ground close together 
