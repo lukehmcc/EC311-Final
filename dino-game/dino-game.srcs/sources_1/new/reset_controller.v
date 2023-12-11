@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 11/29/2023 01:51:27 PM
+// Create Date: 12/07/2023 08:44:01 PM
 // Design Name: 
-// Module Name: rng
+// Module Name: reset_controller
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,30 +20,23 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module rng(
-    input click, //jump
-    input frame,
-    input clk,
-    output reg [15:0] rand
+module reset_controller(
+    up, frame, collision,
+    reset
     );
+    input collision, up, frame;
+    output reg reset;
 
-    reg [7:0] seed;
-    reg [7:0] hold;
-    
     initial begin
-        seed = 3;
-        hold = 3;
+        reset = 0;
     end
-    
-    
-    always @(posedge clk)
-        seed = seed + 1;
-    
-    always @(posedge click) begin
-        if (click == 1)
-            hold = seed;
+
+    always @ (posedge frame) begin
+        if (collision && up) begin 
+            reset = 1;
+        end else begin
+            reset = 0;
+        end
     end
-    
-    always @(posedge frame)
-        rand = hold*seed;
+
 endmodule

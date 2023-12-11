@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 11/29/2023 01:51:27 PM
+// Create Date: 12/08/2023 05:54:59 PM
 // Design Name: 
-// Module Name: rng
+// Module Name: frame_clock_divier
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,30 +20,24 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module rng(
-    input click, //jump
-    input frame,
-    input clk,
-    output reg [15:0] rand
+module frame_clock_divier(
+    clk, fclk
     );
+    input clk;
+    output reg fclk;
 
-    reg [7:0] seed;
-    reg [7:0] hold;
-    
+    reg [20:0] c1;
+
     initial begin
-        seed = 3;
-        hold = 3;
+        c1 = 0;
+        fclk = 0;
     end
     
-    
-    always @(posedge clk)
-        seed = seed + 1;
-    
-    always @(posedge click) begin
-        if (click == 1)
-            hold = seed;
+    always @(posedge clk) begin
+        c1 = c1 + 1;
+        if (c1 == 1666667) begin
+            fclk = ~fclk;
+            c1 = 0;
+        end
     end
-    
-    always @(posedge frame)
-        rand = hold*seed;
 endmodule

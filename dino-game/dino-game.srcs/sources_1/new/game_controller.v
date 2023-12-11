@@ -28,47 +28,47 @@ module game_controller(
     output [3:0] VGA_G,
     output [3:0] VGA_B,
     output VGA_HS,
-    output VGA_VS
+    output VGA_VS,
+    output up, down, idle
     );
     
     // randomness, wizard & fireball x & y offsets
-    wire [7:0] rand, wyo;
+    wire wyo;
+    wire [15:0] rand;
     wire [9:0] fxo1, fyo1, fxo2, fyo2;
-    wire idle, up, down, game_state, reset;
-    reg frame;
-    reg [20:0] c1;
-    
+    wire collision, reset;
+    wire frame;
+
     // create a frame clock
-    initial begin
-    c1 = 0;
-    frame = 0;
-    end
-    
-    always @(posedge in_clk) begin
-        c1 = c1 + 1;
-        if (c1 == 1666667) begin
-            frame = ~frame;
-            c1 = 0;
-        end
-    end
- 
+    frame_clock_divier fcd0(.clk(in_clk), .fclk(frame));
      
-    // mod calls
+    // gets rng
     rng rng(.clk(in_clk),.frame(frame),.click(up),.rand(rand));
     
-    fireball_controller fc0(.frame(frame),.rand(rand), 
-    .fxo1(fxo1), .fyo1(fxo1), 
+    // controlls fireball
+    fireball_controller fc0(.frame(frame), .rand(rand[10:8]), .reset(reset),
+    .collision(collision), .fxo1(fxo1), .fyo1(fyo1), 
     .fxo2(fxo2), .fyo2(fyo2));
     
-    jump_controller jc0(.y_offset(wyo), .in_clk(in_clk), .up(up));
-   
-    vga_controller vc0(.in_clk(in_clk), .wyo(wyo), 
-    .fxo1(fxo1), .fyo1(fxo1),
+    // takes keyboard input and defines jump
+    jump_controller jc0(.y_offset(wyo), .up(up), .reset(reset),
+    .frame(frame), .collision(collision));
+    
+    // outputs to the display
+    vga_controller vc0(.in_clk(in_clk), .wyo(wyo), .crouch(down),
+    .fxo1(fxo1), .fyo1(fyo1),
     .fxo2(fxo2), .fyo2(fyo2),
     .VGA_R(VGA_R), .VGA_G(VGA_G), .VGA_B(VGA_B), .VGA_HS(VGA_HS), .VGA_VS(VGA_VS));
     
-    keyboard_top kt0(.clk(in_clk), .PS2_CLK(PS2_CLK), .PS2_DATA(PS2_DATA), .idle(idle), .up(up), .down(down));
+    // cleans keyboard inputs into up and down presses
+    keyboard_top kt0(.clk(in_clk), .PS2_CLK(PS2_CLK), .PS2_DATA(PS2_DATA), 
+    .idle(idle), .up(up), .down(down));
 
+    // detects collisions
+    collision_controller cc0(.wyo(wyo), .fxo1(fxo1), .fyo1(fyo1), .fxo2(fxo2), 
+    .fyo2(fyo2), .reset(reset), .frame(frame), .collision(collision), .crouch(down));
 
+    // defines reset pulse
+    reset_controller rc0(.collision(collision), .up(up), .frame(frame), .reset(reset));
     
 endmodule

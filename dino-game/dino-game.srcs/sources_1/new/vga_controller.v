@@ -21,7 +21,7 @@
 
 
 module vga_controller(
-    input in_clk,
+    input in_clk, crouch,
     input [7:0] wyo, 
     input [9:0] fxo1, fyo1,fxo2, fyo2, // wizard y offset, fireball x & y offset
     output reg [3:0] VGA_R,
@@ -42,6 +42,7 @@ module vga_controller(
     // wizard: 640 cycles, HS high
     // post-blanking: 16 cycles, HS high
     // synchronization: 96 cycles, HS low
+
     
     reg [11:0] color; 
     reg[11:0] color_fireball;
@@ -107,6 +108,7 @@ module vga_controller(
                     if (vertical_blank == 0)
                     begin
                         // wizard definition
+
                         if (hp < 16 && vp >= (278-wyo) && vp < (294-wyo)) begin
                             index = (vp - (278-wyo)) * 16 + hp; // Adjusted the index calculation
                             color = wizard[index]; // Access the wizard color data
