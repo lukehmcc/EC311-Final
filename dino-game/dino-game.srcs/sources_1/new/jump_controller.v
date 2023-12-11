@@ -22,10 +22,11 @@
 
 module jump_controller(
     input up, frame, collision, reset,
-    output reg [7:0] y_offset
+    output reg [7:0] y_offset,
+    output reg jumping
     );
     // first we gotta sync up the 100MHz clock to 60fps
-    reg direction, jumping; // 0 going up, 1 going down
+    reg direction; // 0 going up, 1 going down
     reg [7:0] y_offset_prev;
     
     // init
