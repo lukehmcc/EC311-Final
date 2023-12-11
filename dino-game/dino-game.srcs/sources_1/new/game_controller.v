@@ -33,7 +33,7 @@ module game_controller(
     );
     
     // randomness, wizard & fireball x & y offsets
-    wire wyo;
+    wire [7:0] wyo;
     wire [15:0] rand;
     wire [9:0] fxo1, fyo1, fxo2, fyo2;
     wire collision, reset;
@@ -52,10 +52,10 @@ module game_controller(
     
     // takes keyboard input and defines jump
     jump_controller jc0(.y_offset(wyo), .up(up), .reset(reset),
-    .frame(frame), .collision(collision));
+    .frame(frame), .collision(collision), .jumping(jumping));
     
     // outputs to the display
-    vga_controller vc0(.in_clk(in_clk), .wyo(wyo), .crouch(down),
+    vga_controller vc0(.in_clk(in_clk), .wyo(wyo), .crouch(down), .jump(jumping), .col(collision),
     .fxo1(fxo1), .fyo1(fyo1),
     .fxo2(fxo2), .fyo2(fyo2),
     .VGA_R(VGA_R), .VGA_G(VGA_G), .VGA_B(VGA_B), .VGA_HS(VGA_HS), .VGA_VS(VGA_VS));
@@ -72,3 +72,4 @@ module game_controller(
     reset_controller rc0(.collision(collision), .up(up), .frame(frame), .reset(reset));
     
 endmodule
+
