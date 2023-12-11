@@ -21,7 +21,7 @@
 
 
 module vga_controller(
-    input in_clk, crouch,
+    input in_clk, crouch, jump, col,
     input [7:0] wyo, 
     input [9:0] fxo1, fyo1,fxo2, fyo2, // wizard y offset, fireball x & y offset
     output reg [3:0] VGA_R,
@@ -43,18 +43,27 @@ module vga_controller(
     // post-blanking: 16 cycles, HS high
     // synchronization: 96 cycles, HS low
 
-    
+    //Game over screen will be 320 x 240 (right now it is 640x480)
+    reg [11:0] gameOver [0:307200];
+    reg game_over; 
     reg [11:0] color; 
     reg[11:0] color_fireball;
     reg [11:0] wizard [0:255];
+    reg [11:0] wizardJump [0:255];
+    reg [11:0] wizardCrouch [0:255];
     reg [11:0] fireball [0:255];
     initial begin
         // Wizard art
         //Change to directory where you're storing these files 
          $readmemh("X:\\Desktop\\WizardStationary.hex", wizard);
+         $readmemh("X:\\Desktop\\wizard_jump.hex", wizardJump);
+         $readmemh("X:\\Desktop\\crouch.hex", wizardCrouch);
         
         //Fireball art 
-        $readmemh("X:\\Desktop\\fireball.hex", fireball);        
+        $readmemh("X:\\Desktop\\fireball.hex", fireball);      
+        
+        //Gamveover
+        $readmemh("X:\\Desktop\\game_over_screen.hex", gameOver);
         
         
         vp = 0; // vertical position
@@ -108,13 +117,26 @@ module vga_controller(
                     if (vertical_blank == 0)
                     begin
                         // wizard definition
-
-                        if (hp < 16 && vp >= (278-wyo) && vp < (294-wyo)) begin
-                            index = (vp - (278-wyo)) * 16 + hp; // Adjusted the index calculation
-                            color = wizard[index]; // Access the wizard color data
-                            VGA_R <= color[11:8]; // Extract the red component
-                            VGA_G <= color[7:4];  // Extract the green component
-                            VGA_B <= color[3:0];  // Extract the blue component
+                        if (hp <= 50 && hp >= 34 && vp >= (283-wyo) && vp < (299-wyo)) begin
+                            if(jump) begin 
+                                index = ((vp - (283-wyo)) * 16) + (hp - 50);
+                                color = wizardJump[index];
+                                VGA_R <= color[11:8]; 
+                                VGA_G <= color[7:4];  
+                                VGA_B <= color[3:0];
+                            end else if(crouch) begin 
+                                index = ((vp - (283-wyo)) * 16) + (hp - 50);
+                                color = wizardCrouch[index]; 
+                                VGA_R <= color[11:8]; 
+                                VGA_G <= color[7:4];  
+                                VGA_B <= color[3:0];
+                            end else begin          
+                                index = ((vp - (283-wyo)) * 16) + (hp - 50); // Adjusted the index calculation to fit the collision hitbox 
+                                color = wizard[index]; // Access the wizard color data
+                                VGA_R <= color[11:8]; // Extract the red component
+                                VGA_G <= color[7:4];  // Extract the green component
+                                VGA_B <= color[3:0];  // Extract the blue component
+                            end
                         // fireball 1 definition
                        end else if (hp >= (620-fxo1) && hp < (636-fxo1) && vp >= (278-fyo1) && vp < (294-fyo1) && fxo1 < 641) begin
                             index_fireball =  (vp - (278-fyo1)) * 16 + (hp - (620-fxo1));
