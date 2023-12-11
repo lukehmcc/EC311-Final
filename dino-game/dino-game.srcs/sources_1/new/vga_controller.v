@@ -43,62 +43,19 @@ module vga_controller(
     // post-blanking: 16 cycles, HS high
     // synchronization: 96 cycles, HS low
 
-    reg [15:0] wizard [15:0][1:0];
-    reg [15:0] fireball [15:0];
-
+    
+    reg [11:0] color; 
+    reg[11:0] color_fireball;
+    reg [11:0] wizard [0:255];
+    reg [11:0] fireball [0:255];
     initial begin
         // Wizard art
-        wizard[0][0] = 16'b1111111111111111;
-        wizard[1][0] = 16'b1111111111111111;
-        wizard[2][0] = 16'b1100000000000011;
-        wizard[3][0] = 16'b1100000000000011;
-        wizard[4][0] = 16'b1100000000000011;
-        wizard[5][0] = 16'b1100000000000011;
-        wizard[6][0] = 16'b1100000000000011;
-        wizard[7][0] = 16'b1100000000000011;
-        wizard[8][0] = 16'b1100000000000011;
-        wizard[9][0] = 16'b1100000000000011;
-        wizard[10][0] = 16'b1100000000000011;
-        wizard[11][0] = 16'b1100000000000011;
-        wizard[12][0] = 16'b1100000000000011;
-        wizard[13][0] = 16'b1100000000000011;
-        wizard[14][0] = 16'b1111111111111111;
-        wizard[15][0] = 16'b1111111111111111;
-
-        wizard[0][1] = 16'b0000000000000000;
-        wizard[1][1] = 16'b0000000000000000;
-        wizard[2][1] = 16'b0000000000000000;
-        wizard[3][1] = 16'b0000000000000000;
-        wizard[4][1] = 16'b0000000000000000;
-        wizard[5][1] = 16'b0000000000000000;
-        wizard[6][1] = 16'b0000000000000000;
-        wizard[7][1] = 16'b0000000000000000;
-        wizard[8][1] = 16'b1111111111111111;
-        wizard[9][1] = 16'b1111111111111111;
-        wizard[10][1] = 16'b1100000000000011;
-        wizard[11][1] = 16'b1100000000000011;
-        wizard[12][1] = 16'b1100000000000011;
-        wizard[13][1] = 16'b1100000000000011;
-        wizard[14][1] = 16'b1111111111111111;
-        wizard[15][1] = 16'b1111111111111111;
+        //Change to directory where you're storing these files 
+         $readmemh("X:\\Desktop\\WizardStationary.hex", wizard);
         
-        // fireball art
-        fireball[0] = 16'b1111111111111111;
-        fireball[1] = 16'b1111111111111111;
-        fireball[2] = 16'b1111111111111111;
-        fireball[3] = 16'b1111111111111111;
-        fireball[4] = 16'b1111111111111111;
-        fireball[5] = 16'b1111111111111111;
-        fireball[6] = 16'b1111111111111111;
-        fireball[7] = 16'b1111111111111111;
-        fireball[8] = 16'b1111111111111111;
-        fireball[9] = 16'b1111111111111111;
-        fireball[10] = 16'b1111111111111111;
-        fireball[11] = 16'b1111111111111111;
-        fireball[12] = 16'b1111111111111111;
-        fireball[13] = 16'b1111111111111111;
-        fireball[14] = 16'b1111111111111111;
-        fireball[15] = 16'b1111111111111111;
+        //Fireball art 
+        $readmemh("X:\\Desktop\\fireball.hex", fireball);        
+        
         
         vp = 0; // vertical position
         count = 1;
@@ -115,6 +72,7 @@ module vga_controller(
         vertical_blank = 1; // one means blank line instead of display data
     end
     
+    integer index,index_fireball;
     /////////// BEGIN HORIZONTAL STATE MACHINE //////////////
     always @(posedge clock)
     begin
@@ -150,20 +108,27 @@ module vga_controller(
                     if (vertical_blank == 0)
                     begin
                         // wizard definition
-                        if (hp > 40 && hp < 57 && vp > 278-wyo && vp < 297-wyo && wizard[vp-279+wyo][crouch][hp-41] == 1) begin
-                            VGA_R <= 8;
-                            VGA_G <= 8;
-                            VGA_B <= 8;
+
+                        if (hp < 16 && vp >= (278-wyo) && vp < (294-wyo)) begin
+                            index = (vp - (278-wyo)) * 16 + hp; // Adjusted the index calculation
+                            color = wizard[index]; // Access the wizard color data
+                            VGA_R <= color[11:8]; // Extract the red component
+                            VGA_G <= color[7:4];  // Extract the green component
+                            VGA_B <= color[3:0];  // Extract the blue component
                         // fireball 1 definition
-                        end else if (hp > 624-fxo1 && hp < 640-fxo1 && vp > 278-fyo1 && vp < 297-fyo1 && fireball[vp-279+fyo1][hp-1+fxo1] == 1 && fxo1 < 641) begin
-                            VGA_R <= 8;
-                            VGA_G <= 8;
-                            VGA_B <= 8;
+                       end else if (hp >= (620-fxo1) && hp < (636-fxo1) && vp >= (278-fyo1) && vp < (294-fyo1) && fxo1 < 641) begin
+                            index_fireball =  (vp - (278-fyo1)) * 16 + (hp - (620-fxo1));
+                            color_fireball = fireball[index_fireball]; 
+                            VGA_R <= color_fireball[11:8];
+                            VGA_G <= color_fireball[7:4];
+                            VGA_B <= color_fireball[3:0];
                         //fireball 2 definition
-                        end else if (hp > 624-fxo2 && hp < 640-fxo2 && vp > 278-fyo2 && vp < 297-fyo2 && fireball[vp-279+fyo2][hp-1+fxo2] == 1 && fxo2 < 641) begin
-                            VGA_R <= 8;
-                            VGA_G <= 8;
-                            VGA_B <= 8;
+                        end else if (hp >= (620-fxo2) && hp < (636-fxo2) && vp >= (278-fyo2) && vp < (294-fyo2) && fxo2 < 641) begin
+                            index_fireball =  (vp - (278-fyo2)) * 16 + (hp - (620-fxo2));
+                            color_fireball = fireball[index_fireball]; 
+                            VGA_R <= color_fireball[11:8];
+                            VGA_G <= color_fireball[7:4];
+                            VGA_B <= color_fireball[3:0];
                         // line for the ground
                         end else if (vp == 300 || (vp == 299 && (hp % 2 == 1 || hp % 3 == 1))) begin
                             VGA_R <= 8;

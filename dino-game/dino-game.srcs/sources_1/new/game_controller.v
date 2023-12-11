@@ -33,7 +33,8 @@ module game_controller(
     );
     
     // randomness, wizard & fireball x & y offsets
-    wire [7:0] rand, wyo;
+    wire wyo;
+    wire [15:0] rand;
     wire [9:0] fxo1, fyo1, fxo2, fyo2;
     wire collision, reset;
     wire frame;
@@ -45,7 +46,7 @@ module game_controller(
     rng rng(.clk(in_clk),.frame(frame),.click(up),.rand(rand));
     
     // controlls fireball
-    fireball_controller fc0(.frame(frame), .rand(rand), .reset(reset),
+    fireball_controller fc0(.frame(frame), .rand(rand[10:8]), .reset(reset),
     .collision(collision), .fxo1(fxo1), .fyo1(fyo1), 
     .fxo2(fxo2), .fyo2(fyo2));
     

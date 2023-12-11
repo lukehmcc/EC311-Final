@@ -24,7 +24,7 @@ module rng(
     input click, //jump
     input frame,
     input clk,
-    output reg [7:0] rand
+    output reg [15:0] rand
     );
 
     reg [7:0] seed;
@@ -39,7 +39,7 @@ module rng(
     always @(posedge clk)
         seed = seed + 1;
     
-    always @(posedge clk) begin
+    always @(posedge click) begin
         if (click == 1)
             hold = seed;
     end
