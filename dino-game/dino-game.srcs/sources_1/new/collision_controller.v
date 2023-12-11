@@ -30,19 +30,43 @@ module collision_controller(
     output reg collision;
 
     always @ (posedge frame) begin
-        // I'm sorry this is very cursed
+        // this is a big conditional
         if (
         (
-            ((((fxo1 >= 564) && (fxo1 <= 580)) && ((0+wyo <= fyo1) && (fyo1 <= 16+wyo))) // has the first fireball hit the upright wizard ?
-            || (((fxo1 >= 564) && (fxo1 <= 580)) && ((0+wyo <= fyo2) && (fyo2 <= 16+wyo))) // has the second fireball hit the upright wizard ?
-            && ~crouch)
+            (
+                (
+                    ((fxo1 >= 564) && (fxo1 <= 580)) // fireball 1 is in wizard x range
+                    &&  // and
+                    ((0+wyo <= fyo1) && (fyo1 <= 16+wyo)) // fireball 1 is in wizard (standing) y range
+                )
+                || // or
+                (
+                    ((fxo2 >= 564) && (fxo2 <= 580)) // fireball 2 is within wizard x range
+                    && // and
+                    ((0+wyo <= fyo2) && (fyo2 <= 16+wyo)) // fireball 2 is within wizard (standing) y range
+                )
+                && // and
+                ~crouch // wizard is standing
+            )
         ) 
         || 
         (
-            ((((fxo1 >= 564) && (fxo1 <= 580)) && ((8+wyo <= fyo1) && (fyo1 <= 16+wyo))) // has the first fireball hit the crouching wizard ?
-            || (((fxo1 >= 564) && (fxo1 <= 580)) && ((8+wyo <= fyo2) && (fyo2 <= 16+wyo))) // has the second fireball hit the crouching wizard ?
-            && crouch)
-        )
+            (
+                (
+                    ((fxo1 >= 564) && (fxo1 <= 580)) // fireball 1 is in wizard x range
+                    &&  // and
+                    ((8+wyo <= fyo1) && (fyo1 <= 16+wyo)) // fireball 1 is in wizard (crouching) y range
+                )
+                || // or
+                (
+                    ((fxo2 >= 564) && (fxo2 <= 580)) // fireball 2 is within wizard x range
+                    && // and
+                    ((8+wyo <= fyo2) && (fyo2 <= 16+wyo)) // fireball 2 is within wizard (crouching) y range
+                )
+                && // and
+                crouch // wizard is crouching
+            )
+        ) 
         && 
         ~reset
         ) begin // has reset happened?
