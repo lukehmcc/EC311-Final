@@ -55,13 +55,13 @@ module collision_controller(
                 (
                     ((fxo1 >= 564) && (fxo1 <= 580)) // fireball 1 is in wizard x range
                     &&  // and
-                    ((8+wyo <= fyo1) && (fyo1 <= 16+wyo)) // fireball 1 is in wizard (crouching) y range
+                    ((0+wyo <= fyo1) && (fyo1 <= 8+wyo)) // fireball 1 is in wizard (crouching) y range
                 )
                 || // or
                 (
                     ((fxo2 >= 564) && (fxo2 <= 580)) // fireball 2 is within wizard x range
                     && // and
-                    ((8+wyo <= fyo2) && (fyo2 <= 16+wyo)) // fireball 2 is within wizard (crouching) y range
+                    ((0+wyo <= fyo2) && (fyo2 <= 8+wyo)) // fireball 2 is within wizard (crouching) y range
                 )
                 && // and
                 crouch // wizard is crouching

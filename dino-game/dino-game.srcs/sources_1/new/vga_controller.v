@@ -21,7 +21,7 @@
 
 
 module vga_controller(
-    input in_clk, crouch, jump, col,
+    input in_clk, crouch, jump, collision,
     input [7:0] wyo, 
     input [9:0] fxo1, fyo1,fxo2, fyo2, // wizard y offset, fireball x & y offset
     output reg [3:0] VGA_R,
@@ -44,8 +44,7 @@ module vga_controller(
     // synchronization: 96 cycles, HS low
 
     //Game over screen will be 320 x 240 (right now it is 640x480)
-    reg [11:0] gameOver [0:307200];
-    reg game_over; 
+    reg [11:0] gameOver [0:76800];
     reg [11:0] color; 
     reg[11:0] color_fireball;
     reg [11:0] wizard [0:255];
@@ -114,61 +113,66 @@ module vga_controller(
                 end
                 else
                 begin
+                    VGA_R <= 0;
+                    VGA_G <= 0;
+                    VGA_B <= 0;
                     if (vertical_blank == 0)
-                    begin
-                        // wizard definition
-                        if (hp <= 50 && hp >= 34 && vp >= (283-wyo) && vp < (299-wyo)) begin
-                            if(jump) begin 
-                                index = ((vp - (283-wyo)) * 16) + (hp - 50);
-                                color = wizardJump[index];
-                                VGA_R <= color[11:8]; 
-                                VGA_G <= color[7:4];  
+                    begin          
+                        //Game over             
+                        if (collision == 1) begin 
+                            if (hp >= 160 && hp < 480 && vp >= 120 && vp < 360) begin
+                                // Adjusted index calculation for centered display
+                                index = (vp - 120) * 320 + (hp - 160);
+                                color = gameOver[index];
+                                VGA_R <= color[11:8];
+                                VGA_G <= color[7:4];
                                 VGA_B <= color[3:0];
-                            end else if(crouch) begin 
-                                index = ((vp - (283-wyo)) * 16) + (hp - 50);
-                                color = wizardCrouch[index]; 
-                                VGA_R <= color[11:8]; 
-                                VGA_G <= color[7:4];  
-                                VGA_B <= color[3:0];
-                            end else begin          
-                                index = ((vp - (283-wyo)) * 16) + (hp - 50); // Adjusted the index calculation to fit the collision hitbox 
-                                color = wizard[index]; // Access the wizard color data
-                                VGA_R <= color[11:8]; // Extract the red component
-                                VGA_G <= color[7:4];  // Extract the green component
-                                VGA_B <= color[3:0];  // Extract the blue component
                             end
-                        // fireball 1 definition
-                       end else if (hp >= (620-fxo1) && hp < (636-fxo1) && vp >= (278-fyo1) && vp < (294-fyo1) && fxo1 < 641) begin
-                            index_fireball =  (vp - (278-fyo1)) * 16 + (hp - (620-fxo1));
-                            color_fireball = fireball[index_fireball]; 
-                            VGA_R <= color_fireball[11:8];
-                            VGA_G <= color_fireball[7:4];
-                            VGA_B <= color_fireball[3:0];
-                        //fireball 2 definition
-                        end else if (hp >= (620-fxo2) && hp < (636-fxo2) && vp >= (278-fyo2) && vp < (294-fyo2) && fxo2 < 641) begin
-                            index_fireball =  (vp - (278-fyo2)) * 16 + (hp - (620-fxo2));
-                            color_fireball = fireball[index_fireball]; 
-                            VGA_R <= color_fireball[11:8];
-                            VGA_G <= color_fireball[7:4];
-                            VGA_B <= color_fireball[3:0];
-                        // line for the ground
-                        end else if (vp == 300 || (vp == 299 && (hp % 2 == 1 || hp % 3 == 1))) begin
-                            VGA_R <= 8;
-                            VGA_G <= 8;
-                            VGA_B <= 8;
-                        // black everything else    
-                        end else begin
-                            VGA_R <= 0;
-                            VGA_G <= 0;
-                            VGA_B <= 0;
+                        end 
+                        // wizard definition  
+//                        end else if (collision == 0) begin                                  
+                            if (hp <= 50 && hp >= 34 && vp >= (283-wyo) && vp < (299-wyo)) begin
+                                if(jump) begin 
+                                    index = ((vp - (283-wyo)) * 16) + (hp - 50);
+                                    color = wizardJump[index];
+                                    VGA_R <= color[11:8]; 
+                                    VGA_G <= color[7:4];  
+                                    VGA_B <= color[3:0];
+                                end else if(crouch) begin 
+                                    index = ((vp - (283-wyo)) * 16) + (hp - 50);
+                                    color = wizardCrouch[index]; 
+                                    VGA_R <= color[11:8]; 
+                                    VGA_G <= color[7:4];  
+                                    VGA_B <= color[3:0];
+                                end else begin          
+                                    index = ((vp - (283-wyo)) * 16) + (hp - 50); // Adjusted the index calculation to fit the collision hitbox 
+                                    color = wizard[index]; // Access the wizard color data
+                                    VGA_R <= color[11:8]; // Extract the red component
+                                    VGA_G <= color[7:4];  // Extract the green component
+                                    VGA_B <= color[3:0];  // Extract the blue component
+                                end
+                            // fireball 1 definition
+                           end else if (hp >= (620-fxo1) && hp < (636-fxo1) && vp >= (278-fyo1) && vp < (294-fyo1) && fxo1 < 641) begin
+                                index_fireball =  (vp - (278-fyo1)) * 16 + (hp - (620-fxo1));
+                                color_fireball = fireball[index_fireball]; 
+                                VGA_R <= color_fireball[11:8];
+                                VGA_G <= color_fireball[7:4];
+                                VGA_B <= color_fireball[3:0];
+                            //fireball 2 definition
+                            end else if (hp >= (620-fxo2) && hp < (636-fxo2) && vp >= (278-fyo2) && vp < (294-fyo2) && fxo2 < 641) begin
+                                index_fireball =  (vp - (278-fyo2)) * 16 + (hp - (620-fxo2));
+                                color_fireball = fireball[index_fireball]; 
+                                VGA_R <= color_fireball[11:8];
+                                VGA_G <= color_fireball[7:4];
+                                VGA_B <= color_fireball[3:0];
+                            // line for the ground
+                            end else if (vp == 300 || (vp == 299 && (hp % 2 == 1 || hp % 3 == 1))) begin
+                                VGA_R <= 8;
+                                VGA_G <= 8;
+                                VGA_B <= 8;
+                            end
+                        // black everything else
                         end
-                    end
-                    else
-                    begin
-                        VGA_R <= 0;
-                        VGA_G <= 0;
-                        VGA_B<= 0;
-                    end
                     hp <= hp + 1;
                 end
             end

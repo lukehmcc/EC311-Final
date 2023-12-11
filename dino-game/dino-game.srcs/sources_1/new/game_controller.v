@@ -55,7 +55,7 @@ module game_controller(
     .frame(frame), .collision(collision), .jumping(jumping));
     
     // outputs to the display
-    vga_controller vc0(.in_clk(in_clk), .wyo(wyo), .crouch(down), .jump(jumping), .col(collision),
+    vga_controller vc0(.in_clk(in_clk), .wyo(wyo), .crouch(down), .jump(jumping), .collision(collision),
     .fxo1(fxo1), .fyo1(fyo1),
     .fxo2(fxo2), .fyo2(fyo2),
     .VGA_R(VGA_R), .VGA_G(VGA_G), .VGA_B(VGA_B), .VGA_HS(VGA_HS), .VGA_VS(VGA_VS));
@@ -72,4 +72,3 @@ module game_controller(
     reset_controller rc0(.collision(collision), .up(up), .frame(frame), .reset(reset));
     
 endmodule
-
