@@ -24,6 +24,8 @@ module vga_controller(
     input in_clk, crouch, jump, collision,
     input [7:0] wyo, 
     input [9:0] fxo1, fyo1,fxo2, fyo2, // wizard y offset, fireball x & y offset
+    input [15:0] BCD_score,
+    input [3:0] ones,tens,hunds,thous,
     output reg [3:0] VGA_R,
     output reg [3:0] VGA_G,
     output reg [3:0] VGA_B,
@@ -81,6 +83,102 @@ module vga_controller(
     end
     
     integer index,index_fireball;
+    
+    /////////// SCORE COUNTER SPRITES ////////////
+    reg [0:3] pixels [15:0][6:0];
+
+initial begin
+// Value 0
+pixels[0][0] = 4'b0110;
+pixels[0][1] = 4'b1001;
+pixels[0][2] = 4'b1001;
+pixels[0][3] = 4'b0000;
+pixels[0][4] = 4'b1001;
+pixels[0][5] = 4'b1001;
+pixels[0][6] = 4'b0110;
+
+// Value 1
+pixels[1][0] = 4'b0000;
+pixels[1][1] = 4'b0001;
+pixels[1][2] = 4'b0001;
+pixels[1][3] = 4'b0000;
+pixels[1][4] = 4'b0001;
+pixels[1][5] = 4'b0001;
+pixels[1][6] = 4'b0000;
+
+// Value 2
+pixels[2][0] = 4'b0110;
+pixels[2][1] = 4'b0001;
+pixels[2][2] = 4'b0001;
+pixels[2][3] = 4'b0110;
+pixels[2][4] = 4'b1000;
+pixels[2][5] = 4'b1000;
+pixels[2][6] = 4'b0110;
+
+// Value 3
+pixels[3][0] = 4'b0110;
+pixels[3][1] = 4'b0001;
+pixels[3][2] = 4'b0001;
+pixels[3][3] = 4'b0110;
+pixels[3][4] = 4'b0001;
+pixels[3][5] = 4'b0001;
+pixels[3][6] = 4'b0110;
+
+// Value 4
+pixels[4][0] = 4'b0000;
+pixels[4][1] = 4'b1001;
+pixels[4][2] = 4'b1001;
+pixels[4][3] = 4'b0110;
+pixels[4][4] = 4'b0001;
+pixels[4][5] = 4'b0001;
+pixels[4][6] = 4'b0000;
+
+// Value 5
+pixels[5][0] = 4'b0110;
+pixels[5][1] = 4'b1000;
+pixels[5][2] = 4'b1000;
+pixels[5][3] = 4'b0110;
+pixels[5][4] = 4'b0001;
+pixels[5][5] = 4'b0001;
+pixels[5][6] = 4'b0110;
+
+// Value 6
+pixels[6][0] = 4'b0110;
+pixels[6][1] = 4'b1000;
+pixels[6][2] = 4'b1000;
+pixels[6][3] = 4'b0110;
+pixels[6][4] = 4'b1001;
+pixels[6][5] = 4'b1001;
+pixels[6][6] = 4'b0110;
+
+// Value 7
+pixels[7][0] = 4'b0110;
+pixels[7][1] = 4'b0001;
+pixels[7][2] = 4'b0001;
+pixels[7][3] = 4'b0000;
+pixels[7][4] = 4'b0001;
+pixels[7][5] = 4'b0001;
+pixels[7][6] = 4'b0000;
+
+// Value 8
+pixels[8][0] = 4'b0110;
+pixels[8][1] = 4'b1001;
+pixels[8][2] = 4'b1001;
+pixels[8][3] = 4'b0110;
+pixels[8][4] = 4'b1001;
+pixels[8][5] = 4'b1001;
+pixels[8][6] = 4'b0110;
+
+// Value 9
+pixels[9][0] = 4'b0110;
+pixels[9][1] = 4'b1001;
+pixels[9][2] = 4'b1001;
+pixels[9][3] = 4'b0110;
+pixels[9][4] = 4'b0001;
+pixels[9][5] = 4'b0001;
+pixels[9][6] = 4'b0000;
+end
+
     /////////// BEGIN HORIZONTAL STATE MACHINE //////////////
     always @(posedge clock)
     begin
@@ -129,6 +227,28 @@ module vga_controller(
                                 VGA_B <= color[3:0];
                             end
                         end 
+                        // score display
+                        if (hp > 0 && hp < 5 && vp > 2 && vp < 10 && pixels[thous][vp-3][hp-1] == 1) begin
+
+                            VGA_R <= 8;
+                            VGA_G <= 8;
+                            VGA_B <= 8;
+                        end
+                        else if (hp > 6 && hp < 11 && vp > 2 && vp < 10 && pixels[hunds][vp-3][hp-7] == 1) begin
+                            VGA_R <= 8;
+                            VGA_G <= 8;
+                            VGA_B <= 8;
+                        end
+                        else if (hp > 12 && hp < 17 && vp > 2 && vp < 10 && pixels[tens][vp-3][hp-13] == 1) begin
+                            VGA_R <= 8;
+                            VGA_G <= 8;
+                            VGA_B <= 8;
+                        end
+                        else if (hp > 18 && hp < 23 && vp > 2 && vp < 10 && pixels[ones][vp-3][hp-19] == 1) begin
+                            VGA_R <= 8;
+                            VGA_G <= 8;
+                            VGA_B <= 8;
+                        end
                         // wizard definition  
 //                        end else if (collision == 0) begin                                  
                             if (hp <= 50 && hp >= 34 && vp >= (283-wyo) && vp < (299-wyo)) begin
