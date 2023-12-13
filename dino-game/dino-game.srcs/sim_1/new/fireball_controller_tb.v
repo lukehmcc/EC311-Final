@@ -24,13 +24,15 @@ module fireball_controller_tb(
 
     );
     reg frame,click, reset;
+    reg [11:0] score;
     wire [9:0] fxo1, fyo1,fxo2,fyo2;
     wire [15:0] rand;
     wire collision;
     reg [7:0] wyo; 
     
+    //COLLISION INTO FBC IS CURRENTLY SET TO 0 FOR TESTING 
     rng rng(.click(click),.frame(frame),.clk(frame),.rand(rand));
-    fireball_controller fbc(.frame(frame),.rand(rand[10:8]),.fxo1(fxo1),.fyo1(fyo1),.fxo2(fxo2),.fyo2(fyo2),.collision(collision),.reset(reset));
+    fireball_controller fbc(.frame(frame),.rand(rand[10:8]),.score(score),.fxo1(fxo1),.fyo1(fyo1),.fxo2(fxo2),.fyo2(fyo2),.collision(0),.reset(reset));
     collision_controller cc0(.fxo1(fxo1), .fyo1(fyo1), .fxo2(fxo2), .fyo2(fyo2), .wyo(wyo), .reset(reset), .frame(frame), .collision(collision));
 
 
@@ -39,8 +41,9 @@ module fireball_controller_tb(
         frame = 0;
         click = 0;
         reset = 0;
+        score = 0;
     end
     always #1 frame = ~frame;
     
-    
+    always @(posedge frame) score = score + 1;
 endmodule

@@ -48,7 +48,7 @@ module game_controller(
     
     // controlls fireball
     fireball_controller fc0(.frame(frame), .rand(rand[10:8]), .reset(reset),
-    .collision(collision), .fxo1(fxo1), .fyo1(fyo1), 
+    .collision(collision),.score(score),.fxo1(fxo1),.fyo1(fyo1), 
     .fxo2(fxo2), .fyo2(fyo2));
     
     // takes keyboard input and defines jump
