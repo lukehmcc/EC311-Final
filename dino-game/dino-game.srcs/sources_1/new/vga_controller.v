@@ -56,15 +56,15 @@ module vga_controller(
     initial begin
         // Wizard art
         //Change to directory where you're storing these files 
-         $readmemh("X:\\Desktop\\WizardStationary.hex", wizard);
-         $readmemh("X:\\Desktop\\wizard_jump.hex", wizardJump);
-         $readmemh("X:\\Desktop\\crouch.hex", wizardCrouch);
+         $readmemh(".\\WizardStationary.hex", wizard);
+         $readmemh(".\\wizard_jump.hex", wizardJump);
+         $readmemh(".\\crouch.hex", wizardCrouch);
         
         //Fireball art 
-        $readmemh("X:\\Desktop\\fireball.hex", fireball);      
+        $readmemh(".\\fireball.hex", fireball);      
         
         //Gamveover
-        $readmemh("X:\\Desktop\\game_over_screen.hex", gameOver);
+        $readmemh(".\\game_over_screen.hex", gameOver);
         
         
         vp = 0; // vertical position
