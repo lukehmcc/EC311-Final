@@ -1,10 +1,21 @@
 ﻿# EC311-Final - Wizard Skate
 
+## Team name
+Wizrd Skaters
 
+## Contributors:
+
+- Angel Amaya
+- Naeel Quasem
+- Roger Brown
+- Luke McCarthy
 
 ## Summary:
 
 This is an FPGA project that is effectively dino run but with a new coat of paint. 
+
+## Demo Video:
+Link
 
 ## Features:
 
@@ -32,13 +43,6 @@ This is an FPGA project that is effectively dino run but with a new coat of pain
 - Generate bitstream for project & push to FPGA.
 - Plug in keyboard and display.
 - Enjoy!
-
-## Contributors:
-
-- Angel Amaya
-- Naeel Quasem
-- Roger Brown
-- Luke McCarthy
 
 ## General Code Overview
 
