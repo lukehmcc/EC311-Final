@@ -28,6 +28,8 @@ module fireball_controller(
     );    
     // Vars
     
+    reg [3:0] faster;
+
     // Init
     initial begin 
         fxo1 = 0; 
@@ -38,7 +40,6 @@ module fireball_controller(
     end
     
     reg ground = 316;
-    reg [3:0] faster;
     
     // Main logic
     always @(posedge frame) begin 
@@ -56,8 +57,8 @@ module fireball_controller(
                     fxo2 = -75;
                 end 
                 2:begin
-                    fyo1 = ground + 10; //two elevated
-                    fyo2 = ground + 26;
+                    fyo1 = ground + 5; //two elevated
+                    fyo2 = ground + 25;
                     fxo2 = 0;
                 end 
                 3:begin
@@ -93,14 +94,14 @@ module fireball_controller(
             endcase
         end else begin
         if (score >= (300 + (300*faster)) && fxo1 == 0) faster = faster + 1;
-            if (reset) begin
-                fxo1 = 0;
-                fxo2 = 0;
-                faster = 0;
-            end else if (~collision) begin
-                fxo1 = fxo1 + 5 + faster;
-                fxo2 = fxo2 + 5 + faster;
-            end 
+        if (reset) begin
+            fxo1 = 0;
+            fxo2 = 0;
+        end else if (~collision) begin
+            fxo1 = fxo1 + 5 + faster;
+            fxo2 = fxo2 + 5 + faster;
+        end else if (collision) faster = 0;
+        
         end
     end
 endmodule

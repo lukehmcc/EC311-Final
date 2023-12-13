@@ -23,16 +23,16 @@
 module spriteChecker(
     );
     
-    reg [11:0] gameOver [0:76800];
+    reg [11:0] fireball [0:255];
     integer i;
 
     initial begin
         // Load the image data into the gameOver register
-        $readmemh("X:\\Desktop\\game_over_screen.hex", gameOver);
+        $readmemh("fireball.hex", fireball);  
 
         // Print the contents of the gameOver register
-        for (i = 0; i < 32000; i = i + 1) begin
-            $display("gameOver[%0d] = %0h", i, gameOver[i]);
+        for (i = 0; i < 256; i = i + 1) begin
+            $display("fireball[%0d] = %0h", i, fireball[i]);
         end
     end
 endmodule

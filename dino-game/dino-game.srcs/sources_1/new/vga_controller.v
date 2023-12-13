@@ -266,21 +266,21 @@ end
                                 VGA_B <= color_fireball[3:0];
                           // wizard definition  
                          //end else if (collision == 0) begin                                  
-                            end else if (hp <= 50 && hp >= 34 && vp >= (283-wyo) && vp < (299-wyo)) begin
+                            end else if (hp <= 50 && hp >= 34 && vp >= (282-wyo) && vp < (298-wyo)) begin
                                 if(jump) begin 
-                                    index = ((vp - (285-wyo)) * 16) + (hp - 50);
+                                    index = ((vp - (282-wyo)) * 16) + (hp - 34);
                                     color = wizardJump[index];
                                     VGA_R <= color[11:8]; 
                                     VGA_G <= color[7:4];  
                                     VGA_B <= color[3:0];
                                 end else if(crouch) begin 
-                                    index = ((vp - (283-wyo)) * 16) + (hp - 50);
+                                    index = ((vp - (282-wyo)) * 16) + (hp - 34);
                                     color = wizardCrouch[index]; 
                                     VGA_R <= color[11:8]; 
                                     VGA_G <= color[7:4];  
                                     VGA_B <= color[3:0];
                                 end else begin          
-                                    index = ((vp - (283-wyo)) * 16) + (hp - 50); // Adjusted the index calculation to fit the collision hitbox 
+                                    index = ((vp - (282-wyo)) * 16) + (hp - 34); // Adjusted the index calculation to fit the collision hitbox 
                                     color = wizard[index]; // Access the wizard color data
                                     VGA_R <= color[11:8]; // Extract the red component
                                     VGA_G <= color[7:4];  // Extract the green component
