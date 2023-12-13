@@ -40,18 +40,27 @@ This is an FPGA project that is effectively dino run but with a new coat of pain
 - Roger Brown
 - Luke McCarthy
 
-## Code Overview
--Keyboard 
+## General Code Overview
+
+#### Keyboard (keyboard_top.v)
+
 Interprets and debounces PS2 input for keyboard. Adapted from https://github.com/Digilent/Nexys-A7-100T-Keyboard.
--RNG
-Generates pseudorandom numbers randomized with user input. 
--Fireball Controller
-Uses random number generator to choose fireball orientations. Increments x and y offsets for fireballs.
--Jump Controller
-Takes input from keyboard to generate y offsets for wizard jumping 
--VGA controller
-Controls all VGA output. Sprites based on bitmaps. Sprite locations based on x & y offsets passed from Fireball and Jump. 
--Collision Control
+
+#### RNG (rng.v)
+
+Generates pseudorandom numbers randomized with user input. Using a inital fixed seed combined user input over time to improve randomness
+
+#### Fireball Controller (fireball_controller.v)
+Uses random number generator to choose fireball orientations. Increments x and y offsets for fireballs. As the score increases the fireballs move faster.
+
+#### Jump Controller (jump_controller.v)
+Takes input from keyboard to generate y offsets for wizard jumping.
+
+#### VGA controller (vga_controller.v)
+Controls all VGA output. Sprites based on bitmaps. Sprite locations based on x & y offsets passed from Fireball and Jump.
+
+#### Collision Control (collision_controller.v)
 Calculates if the wizard is touching a fireball based on x & y offsets.
--Score Keeping
-Keeps score.
+
+#### Score Keeping(score_count_forVGA.v)
+Keeps score based on the time.

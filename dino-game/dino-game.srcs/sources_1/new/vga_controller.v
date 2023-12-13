@@ -56,15 +56,15 @@ module vga_controller(
     initial begin
         // Wizard art
         //Change to directory where you're storing these files 
-         $readmemh(".\\WizardStationary.hex", wizard);
-         $readmemh(".\\wizard_jump.hex", wizardJump);
-         $readmemh(".\\crouch.hex", wizardCrouch);
+         $readmemh("WizardStationary.hex", wizard);
+         $readmemh("wizard_jump.hex", wizardJump);
+         $readmemh("crouch.hex", wizardCrouch);
         
         //Fireball art 
-        $readmemh(".\\fireball.hex", fireball);      
+        $readmemh("fireball.hex", fireball);      
         
         //Gamveover
-        $readmemh(".\\game_over_screen.hex", gameOver);
+        $readmemh("game_over_screen.hex", gameOver);
         
         
         vp = 0; // vertical position
@@ -249,11 +249,26 @@ end
                             VGA_G <= 8;
                             VGA_B <= 8;
                         end
-                        // wizard definition  
-//                        end else if (collision == 0) begin                                  
-                            if (hp <= 50 && hp >= 34 && vp >= (283-wyo) && vp < (299-wyo)) begin
+                       
+                            // fireball 1 definition
+                           if (hp >= (620-fxo1) && hp < (636-fxo1) && vp >= (278-fyo1) && vp < (294-fyo1) && fxo1 < 641) begin
+                                index_fireball =  (vp - (278-fyo1)) * 16 + (hp - (620-fxo1));
+                                color_fireball = fireball[index_fireball]; 
+                                VGA_R <= color_fireball[11:8];
+                                VGA_G <= color_fireball[7:4];
+                                VGA_B <= color_fireball[3:0];
+                            //fireball 2 definition
+                            end else if (hp >= (620-fxo2) && hp < (636-fxo2) && vp >= (278-fyo2) && vp < (294-fyo2) && fxo2 < 641) begin
+                                index_fireball =  (vp - (278-fyo2)) * 16 + (hp - (620-fxo2));
+                                color_fireball = fireball[index_fireball]; 
+                                VGA_R <= color_fireball[11:8];
+                                VGA_G <= color_fireball[7:4];
+                                VGA_B <= color_fireball[3:0];
+                          // wizard definition  
+                         //end else if (collision == 0) begin                                  
+                            end else if (hp <= 50 && hp >= 34 && vp >= (283-wyo) && vp < (299-wyo)) begin
                                 if(jump) begin 
-                                    index = ((vp - (283-wyo)) * 16) + (hp - 50);
+                                    index = ((vp - (285-wyo)) * 16) + (hp - 50);
                                     color = wizardJump[index];
                                     VGA_R <= color[11:8]; 
                                     VGA_G <= color[7:4];  
@@ -271,20 +286,6 @@ end
                                     VGA_G <= color[7:4];  // Extract the green component
                                     VGA_B <= color[3:0];  // Extract the blue component
                                 end
-                            // fireball 1 definition
-                           end else if (hp >= (620-fxo1) && hp < (636-fxo1) && vp >= (278-fyo1) && vp < (294-fyo1) && fxo1 < 641) begin
-                                index_fireball =  (vp - (278-fyo1)) * 16 + (hp - (620-fxo1));
-                                color_fireball = fireball[index_fireball]; 
-                                VGA_R <= color_fireball[11:8];
-                                VGA_G <= color_fireball[7:4];
-                                VGA_B <= color_fireball[3:0];
-                            //fireball 2 definition
-                            end else if (hp >= (620-fxo2) && hp < (636-fxo2) && vp >= (278-fyo2) && vp < (294-fyo2) && fxo2 < 641) begin
-                                index_fireball =  (vp - (278-fyo2)) * 16 + (hp - (620-fxo2));
-                                color_fireball = fireball[index_fireball]; 
-                                VGA_R <= color_fireball[11:8];
-                                VGA_G <= color_fireball[7:4];
-                                VGA_B <= color_fireball[3:0];
                             // line for the ground
                             end else if (vp == 300 || (vp == 299 && (hp % 2 == 1 || hp % 3 == 1))) begin
                                 VGA_R <= 8;

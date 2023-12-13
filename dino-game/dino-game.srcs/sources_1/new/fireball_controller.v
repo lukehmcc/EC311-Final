@@ -46,19 +46,19 @@ module fireball_controller(
             fxo1 = 0; fxo2 = 0;
             case (rand) 
                 0:begin
-                    fyo1 = ground; //one at ground
+                    fyo1 = ground; //two at ground
                     fyo2 = ground;
-                    fxo2 = -700;
+                    fxo2 = -17;
                 end 
                 1:begin
                     fyo1 = ground; // two at ground small gap
                     fyo2 = ground;
-                    fxo2 = -50;
+                    fxo2 = -75;
                 end 
                 2:begin
-                    fyo1 = ground + 15; //one elevated
-                    fyo2 = ground;
-                    fxo2 = -700;
+                    fyo1 = ground + 10; //two elevated
+                    fyo2 = ground + 26;
+                    fxo2 = 0;
                 end 
                 3:begin
                     fyo1 = ground; //two, one elevated behind
@@ -68,22 +68,22 @@ module fireball_controller(
                 4:begin
                     fyo1 = ground; //two on ground close together 
                     fyo2 = ground;
-                    fxo2 = -15;
+                    fxo2 = -20;
                 end 
                 5:begin
                     fyo1 = ground; // two on ground big gap
                     fyo2 = ground;
-                    fxo2 = -45;
+                    fxo2 = -50;
                 end 
                 6:begin
                     fyo1 = ground; //two, one above far behind
                     fyo2 = ground + 40;
-                    fxo2 = -40;
+                    fxo2 = -75;
                 end 
                 7:begin
                     fyo1 = ground + 15; // two, one above ahead
                     fyo2 = ground;
-                    fxo2 = -30;
+                    fxo2 = -50;
                 end 
                 8:begin
                     fyo1 = ground + 20; // two, one above ahead
@@ -96,6 +96,7 @@ module fireball_controller(
             if (reset) begin
                 fxo1 = 0;
                 fxo2 = 0;
+                faster = 0;
             end else if (~collision) begin
                 fxo1 = fxo1 + 5 + faster;
                 fxo2 = fxo2 + 5 + faster;
