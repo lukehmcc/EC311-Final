@@ -15,7 +15,7 @@ Wizrd Skaters
 This is an FPGA project that is effectively dino run but with a new coat of paint. 
 
 ## Demo Video:
-Link
+[Link](https://www.youtube.com/watch?v=7dWcLybavoA)
 
 ## Features:
 
